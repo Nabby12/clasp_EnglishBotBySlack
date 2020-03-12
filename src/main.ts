@@ -127,10 +127,12 @@ const TARGETMINITUE: string = PropertiesService.getScriptProperties().getPropert
 const TRIGGERTARGETFUNCTION: string = PropertiesService.getScriptProperties().getProperty('TRIGGERTARGETFUNCTION');
 
 function setTrigger {
-    let setTime = new Date();
-    setTime.setHours(Number(TARGETHOUR));
-    setTime.setMinutes(Number(TARGETMINITUE));
-    ScriptApp.newTrigger(TRIGGERTARGETFUNCTION).timeBased().at(setTime).create();
+    let trgtTime: Date = new Date();
+    // 同日だとなぜか作成したトリガーがエラーになってしまうので、前日に翌日のトリガー作成を実行
+    trgtTime.setDate(trgtTime.getDate() + 1);
+    trgtTime.setHours(Number(TARGETHOUR));
+    trgtTime.setMinutes(Number(TARGETMINITUE));
+    ScriptApp.newTrigger(TRIGGERTARGETFUNCTION).timeBased().at(trgtTime).create();
 }
 function delTrigger() {
   let triggers = ScriptApp.getProjectTriggers();
