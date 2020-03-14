@@ -137,8 +137,10 @@ const TRIGGERTARGETFUNCTION: string = PropertiesService.getScriptProperties().ge
 
 function setTrigger {
     let trgtTime: Date = new Date();
-    // 同日だとなぜか作成したトリガーがエラーになってしまうので、前日に翌日のトリガー作成を実行
+    // アメリカ東部時間を修正（サマータイムは考慮しない）
     trgtTime.setDate(trgtTime.getDate() + 1);
+    trgtTime.setHours(trgtTime.getHours() - 9);
+    
     trgtTime.setHours(Number(TARGETHOUR));
     trgtTime.setMinutes(Number(TARGETMINITUE));
     ScriptApp.newTrigger(TRIGGERTARGETFUNCTION).timeBased().at(trgtTime).create();
