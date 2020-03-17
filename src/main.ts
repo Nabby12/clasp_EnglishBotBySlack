@@ -137,18 +137,10 @@ const TRIGGERTARGETFUNCTION: string = PropertiesService.getScriptProperties().ge
 
 function setTrigger {
     let trgtTime: Date = new Date();
-    // 0:00時台に稼働するので、その～時間後の～分を指定する（タイムゾーンのずれを回避するため）
-    trgtTime.setHours(trgtTime.getHours() + Number(TARGETHOUR));
+    // 日本時間0:00台に稼働するので、その～時間後の～分を指定する
+    trgtTime.setHours(Number(TARGETHOUR));
     trgtTime.setMinutes(Number(TARGETMINITUE));
-    // 実行時間と時差の関係で日付がずれるので1日進める
-    trgtTime.setDate(trgtTime.getDate() + 1);
-    
-    // // アメリカ東部時間を修正（サマータイムは考慮しない）
-    // trgtTime.setDate(trgtTime.getDate() + 1);
-    // trgtTime.setHours(trgtTime.getHours() - 9);
-    
-    // trgtTime.setHours(Number(TARGETHOUR));
-    // trgtTime.setMinutes(Number(TARGETMINITUE));
+
     ScriptApp.newTrigger(TRIGGERTARGETFUNCTION).timeBased().at(trgtTime).create();
 }
 function delTrigger() {
