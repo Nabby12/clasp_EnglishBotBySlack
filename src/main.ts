@@ -135,26 +135,10 @@ const TARGETHOUR: string = PropertiesService.getScriptProperties().getProperty('
 const TARGETMINITUE: string = PropertiesService.getScriptProperties().getProperty('TARGETMINITUE');
 const TRIGGERTARGETFUNCTION: string = PropertiesService.getScriptProperties().getProperty('TRIGGERTARGETFUNCTION');
 
-function setTrigger {
-    let trgtTime: Date = new Date();
-    // 日本時間0:00台に稼働するので、その～時間後の～分を指定する
-    trgtTime.setHours(Number(TARGETHOUR));
-    trgtTime.setMinutes(Number(TARGETMINITUE));
-
-    ScriptApp.newTrigger(TRIGGERTARGETFUNCTION).timeBased().at(trgtTime).create();
-}
-function delTrigger() {
-  let triggers = ScriptApp.getProjectTriggers();
-  for(var i=0; i < triggers.length; i++) {
-    if (triggers[i].getHandlerFunction() === TRIGGERTARGETFUNCTION) {
-      ScriptApp.deleteTrigger(triggers[i]);
-    }
-  }
-}
-
 function SendPhraseByBot {
-    // 呼び出したトリガーを削除（毎日新しく生成されているため）
+    // 呼び出したトリガーを削除し翌日のトリガーを生成
     delTrigger();
+    setTrigger();
 
     let trgtSpreadSheet = SpreadsheetApp.openById(SPREADSHEET_ID);
     let trgtSh = trgtSpreadSheet.getSheetByName(SHEET1_NAME);
@@ -216,4 +200,22 @@ ${ trgtDescription }`
     PostMessageToSlack(sendComment);
     
     return ContentService.createTextOutput();
+}
+
+function setTrigger {
+    let trgtTime: Date = new Date();
+    // 実行時間翌日の指定時間を取得する
+    trgtTime.setDate(trgtTime.getDate() + 1)
+    trgtTime.setHours(Number(TARGETHOUR));
+    trgtTime.setMinutes(Number(TARGETMINITUE));
+
+    ScriptApp.newTrigger(TRIGGERTARGETFUNCTION).timeBased().at(trgtTime).create();
+}
+function delTrigger() {
+  let triggers = ScriptApp.getProjectTriggers();
+  for(var i=0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === TRIGGERTARGETFUNCTION) {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
 }
