@@ -11,7 +11,7 @@ function doPost(e: string) {
         throw new Error('Invalid Token');
     }
     
-    let arg: string = e.parameter.text.replace('　', ' ').trim();
+    let arg: string = e.parameter.text.replace(/　/g, ' ').trim();
     
     if (arg.length > 0) {
         let tmpAry: string[] = arg.split(' ');
