@@ -202,7 +202,7 @@ ${ trgtDescription }`
     return ContentService.createTextOutput();
 }
 
-function setTrigger {
+function setTrigger() {
     let trgtTime: Date = new Date();
     // 実行時間翌日の指定時間を取得する
     trgtTime.setDate(trgtTime.getDate() + 1)
